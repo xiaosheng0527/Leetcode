@@ -53,19 +53,6 @@ public class LetterCombinationsOfAPhoneNumber{
 
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
-    /**
-     *
-      * @param digits   按键的2~9对应的字符串，eg "23"
-     *                 此时最好的方法就是将'2'对应的字符串 "abc" ,'3'对应的字符串"def"分别存储到哈希表中
-     * @return
-     *
-     * 首先使用哈希表存储每个数字对应的所有可能的字母，然后进行回溯操作。
-     *
-     * 回溯过程中维护一个字符串，表示已有的字母排列（如果未遍历完电话号码的所有数字，则已有的字母排列是不完整的）。
-     * 该字符串初始为空。每次取电话号码的一位数字，从哈希表中获得该数字对应的所有可能的字母，并将其中的一个字母插入到已有的字母排列后面，
-     * 然后继续处理电话号码的后一位数字，直到处理完电话号码中的所有数字，即得到一个完整的字母排列。然后进行回退操作，遍历其余的字母排列。
-     * 回溯算法用于寻找所有的可行解，如果发现一个解不可行，则会舍弃不可行的解。在这道题中，由于每个数字对应的每个字母都可能进入字母组合，因此不存在不可行的解，直接穷举所有的解即可。
-     */
     public List<String> letterCombinations(String digits) {
 
         List<String> combinations = new ArrayList<>() ; // 用来保存字母组合的情况
@@ -111,7 +98,13 @@ class Solution {
             for(int i = 0 ; i < str.length() ; i++){
                 combination.append(str.charAt(i)) ; // 获取到获取到第一个数字映射的字符
                 dfs(combinations, numsMap, digits, index + 1, combination); // 相当于回溯，dfs
-                combination.deleteCharAt(index) ;   // 删除刚好结合的后一个字符，然后进行遍历for循环，再次结合，然后递归入栈到dfs，满足条件，就添加一个结合的字符串，然后再次回溯，删除
+                // 注意：这里删除的字符是刚才匹配到的第二个字符，即为digits中第二个字符 映射的字符串
+                // 故传入的参数应该是index，不能写成i，否则在循环遍历中，会出现下标越界，
+                // 剖析：这里需要得到另一种答案，即需要将第二个字符删除，而前面的index=1刚好是符合第二个字符下的情况
+                //combination.deleteCharAt(index) ;   // 删除刚好结合的最后一个字符，然后进行遍历，再次结合，然后递归入栈到dfs，满足条件，就添加一个结合的字符串，然后再次回溯，删除
+                // 这个index是记录遍历第几个数字了，就是用来遍历digits的（题目中给出数字字符串），同时index也表示树的深度。刚好index也是当前遍历到的当前层的元素。故可以直接进行删除
+                // 这两个删除元素的方法结果是一样的
+                combination.deleteCharAt(combination.length() - 1) ;
             }
         }
     }
