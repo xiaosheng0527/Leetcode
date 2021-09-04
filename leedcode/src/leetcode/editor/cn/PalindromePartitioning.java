@@ -70,14 +70,21 @@ class Solution {
     private void dfs(String s, int len, List<List<String>> res, List<String> path, int beginIndex) {
 
         // 递归结束条件
-        //如果起始位置大于s的大小，说明找到了一组分割方案，即 beginIndex >= len
+        // 如果起始位置大于s的大小，说明找到了一组分割方案，即 beginIndex >= len
         // 但，其实在 beginIndex == len 的时候，起始位置已经到字符串的尾部的后一个位置，
         // 故说明此时若满足回文串，则就符合题意，将path添加到res中
-        // 如果不满足，则此path集合就为空，这种理解思路是错的***
+
+        // 那如果不满足，则此path集合就为空，这种理解思路是错的***
         // 那如果是前面的子串满足回文串，而后面的子串不满足回文串，则path路径其实会把前面已经保存的的子串进行清空
         // 在非回文子串中不可能会出现beginIndex == len
         // why？
-        //
+        // 因为如果不是回文串时，需要继续当前要搜索的子集合中的后一个位置，此时并没有影响到beginIndex，之后又恰好没有找到回文串
+        // 那么如果都刚好此时i遍历到len时，退出for循环，此时的beginIndex却没有到达len的位置，那么就会一直弹栈，即到最后将前面原来的子串是回文串的数据也要弹出来，
+        // 这需要所有的数据都符合回文串才可以将path添加到res中
+        // 综上：【beginIndex，i】，下面的beginIndex相当于控制子串的左边界，i控制子串的有边界
+        // 如果符合回文串，需要进行递归，i+1，将左边界重置 为 i+1，然后右边界跟着左边界同步变化 ，       递归结束条件： beginIndex == len
+        // 如果不符合回文串，需要遍历同一个子串的后一个位置，以便全局扫描，即，左边界不变，右边界+1，即i+1，当前路径 结束条件i == len ,后面就需要全部弹出来，然后搜索另一个路径
+
         if(beginIndex == len){
             res.add(new ArrayList<>(path)) ;
             return ;
