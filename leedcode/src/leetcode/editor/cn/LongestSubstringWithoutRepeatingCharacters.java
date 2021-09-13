@@ -60,6 +60,7 @@ public class LongestSubstringWithoutRepeatingCharacters{
 class Solution {
     public int lengthOfLongestSubstring(String s) {
 
+
         Map<Character,Integer> map = new HashMap<>() ;
         //char[] chars = s.toCharArray() ;
         int maxLen = 0 ;
@@ -68,9 +69,9 @@ class Solution {
         for(int right = 0 ; right < s.length() ; right++){
             char ch = s.charAt(right) ;
             if(map.containsKey(s.charAt(ch))){
-                left = Math.max(map.get(ch) + 1,left) ; // 覆盖左边界
+                left = Math.max(map.get(ch) + 1,left) ; // 覆盖左边界,避免后面出现 map.get(ch) + 1 出现歧义
             }
-
+            // 这里是添加right指针指向字符串对应的字符，将其添加到
             map.put(ch, right) ;
             maxLen = Math.max(maxLen, right - left + 1) ;
 

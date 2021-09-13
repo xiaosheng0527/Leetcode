@@ -54,64 +54,44 @@ public class SquaresOfASortedArray{
 
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {
+
     /**
+     * 数组其实是有序的， 只不过负数平方之后可能成为最大数了。
      *
-     * @param nums  待排序的数组
-     * @return
+     * 那么数组平方的最大值就在数组的两端，不是最左边就是最右边，不可能是中间。
      *
-     * 注意：本题其实可以考虑使用归并排序，因为，原数组已然是排序好的，
-     *      特殊点在于存在正数和负数，那么我们是不是可以将两个序列分开来，
-     *      然后用一个temp数组，临时保存排序完的数组，之后进行返回
+     * 此时可以考虑双指针法了，i指向起始位置，j指向终止位置。
+     *
+     * 定义一个新数组res，和A数组一样的大小，让k指向res数组终止位置
+     *
+     * 之后需要从大到小将结果添加到res中，然后k--，直到后面k=-1，退出循环
      */
     public int[] sortedSquares(int[] nums) {
-        // 先求出正数和负数的分隔点【若存在0，则0属于正数】
-        int division = -1 ; // 初始化为-1
-        int len = nums.length ;
-        for(int i = 0 ; i < len ; i++){
-            if(nums[i] < 0){
-                division = i ;
-            }else{
-                break ;
-            }
 
-        }
-        //System.out.println(division);
-        // 确定了分隔点，则可以使用归并排序
-        int tempLeft = 0 ;
-        int mid_L = division ;
-        int mid_R = division + 1 ;
-        int right = len - 1 ;
-        int[] res = new int[len] ;
-        while(division < 0){
-            // 说明该数组没有一个是小于0的
-            if(right < 0){
-                return res ;
-            }
-            res[right] = nums[right] * nums[right] ;
-            right-- ;
-        }
-        while(division >=0 && mid_L >= 0 && mid_R <= right){
-            if(nums[mid_L] * nums[mid_L] < nums[mid_R] * nums[mid_R]){
-                res[tempLeft] = nums[mid_L] * nums[mid_L] ;
-                tempLeft++;
-                mid_L-- ;
-            }else{
-                res[tempLeft] = nums[mid_R] * nums[mid_R] ;
-                tempLeft++ ;
-                mid_R++ ;
+        // 此题目可以使用双指针，i，j
+        // 注意：此题的双指针并不是快慢指针，而是两个普通的指针，不要理解错两种的用途
+
+        int len = nums.length ;
+        int[] res = new int[len] ;  // 定义一个新数组用于保存最后保存的结果
+
+        int k = res.length - 1 ;    // 指针k指向数组res的尾部，
+
+        // 注意：这里是循环条件，i <= j ，而i > j ，则说明旧数组已经全部添加到res
+        // 但为什么要 i <= j ，你可以想象两辆车相向运动，i有++的趋势，j有--的趋势，
+        // 直到i == j，遇到，之后i > j，就相离【即结束循环，得到最后的res】
+        for(int i = 0 ,j = res.length - 1 ; i <= j ; ){
+
+            if(nums[i]*nums[i] < nums[j] * nums[j]){
+                res[k--] = nums[j]*nums[j] ;
+                j-- ;
+            } else {    // nums[i]*nums[i] >= nums[j] * nums[j]
+                res[k--] = nums[i]*nums[i] ;
+                i++ ;
             }
         }
-        while(mid_L >= 0){ // 说明负数还没有比较完，即负数的平方大
-            res[tempLeft] = nums[mid_L] * nums[mid_L] ;
-            mid_L-- ;
-            tempLeft++ ;
-        }
-        while(mid_R <= right){ // 说明负数还没有比较完，即负数的平方大
-            res[tempLeft] = nums[mid_R] * nums[mid_R] ;
-            mid_R++ ;
-            tempLeft++ ;
-        }
+
         return res ;
+
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
