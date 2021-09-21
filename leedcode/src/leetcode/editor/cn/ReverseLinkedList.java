@@ -43,6 +43,8 @@ package leetcode.editor.cn;
 // Related Topics 递归 链表 
 // 👍 1886 👎 0
 
+import java.util.List;
+
 public class ReverseLinkedList{
     public static void main(String[] args) {
         Solution solution = new ReverseLinkedList().new Solution();
@@ -60,10 +62,46 @@ public class ReverseLinkedList{
  *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
+
+public class ListNode {
+    int val;
+    ListNode next;
+    ListNode() {}
+    ListNode(int val) { this.val = val; }
+    ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+}
 class Solution {
-//    public ListNode reverseList(ListNode head) {
-//
-//    }
+    // 递归
+    public ListNode reverseList(ListNode head) {
+
+        // 将链表长度为0或者 链表长度为1 的 链表分开考虑
+        // 这样可以减少进入 递归函数 判断的时间
+        if(head == null || head.next == null){
+            return head ;
+        }
+
+        return reverse(null, head) ;
+
+    }
+
+    private ListNode reverse(ListNode prev,ListNode cur) {
+
+        // 注意，如果是递归结束后，此时cur == null ，此时的prev指针刚好就是指向反转链表的 有效头节点
+        // 之后会一直 递归返回，此时一直弹栈，直到最后 返回的 prev 值就是 递归深处的 prev指针指向的节点
+        if(cur == null){
+            return prev ;
+        }
+
+        ListNode temp = null ;
+        temp = cur.next ;   // 先保存下一个节点
+        cur.next = prev ;   // 反转
+        // 更新prev、cur位置
+        prev = cur;
+        cur = temp;
+        return reverse(prev, cur) ;
+
+
+    }
 }
 //leetcode submit region end(Prohibit modification and deletion)
 

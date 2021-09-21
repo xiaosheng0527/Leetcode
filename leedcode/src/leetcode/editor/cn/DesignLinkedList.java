@@ -150,6 +150,8 @@ class MyLinkedList {
             }
         } else {
             cur = tail ;
+            // 注意：如果此时的size = 10，则index 索引值 最大就是 9
+            // 且 cur指针刚开始指向的是 虚拟尾结点，所以这里需要多遍历一次
             for(int i = 0 ; i < size - index ; i++){    // 这里面具体范围要加1还是减1，自己可以带个值验证
                 cur = cur.prev ;
             }
